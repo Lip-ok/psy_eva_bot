@@ -120,17 +120,16 @@ bot.on("callback_query", (callbackQuery) => {
   askNextQuestion(chatId);
 });
 
-// Отправка результатов
 function sendResults(chatId) {
   const user = userResults[chatId];
-  let resultMessage = `Результаты теста для пользователя ${user.username}:\n`;
+  let resultMessage = "Ваши результаты по аспектам:\n";
 
   for (const [aspect, score] of Object.entries(user.scores)) {
     resultMessage += `*${aspect}*: ${score}\n`;
   }
-  
+
   bot.sendMessage(chatId, "Спасибо за прохождение теста! Ваши ответы отправлены администратору.");
-  bot.sendMessage(ADMIN_ID, resultMessage, { parse_mode: "Markdown" });
+  bot.sendMessage(ADMIN_ID, `Результаты теста пользователя ${user.name}:\n${resultMessage}`, { parse_mode: "Markdown" });
 }
 
 // Запуск веб-сервера
