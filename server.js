@@ -380,6 +380,11 @@ const userResults = {};
 const bot = new TelegramBot(TOKEN, { polling: true });
 const app = express();
 
+// Установка команд для панели
+bot.setMyCommands([
+  { command: "/start", description: "Начать тест" },
+]);
+
 // Обработка команд /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
