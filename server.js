@@ -52,6 +52,10 @@ const questions = [
 // Хранение результатов
 const userResults = {};
 
+// Инициализация бота
+const bot = new TelegramBot(TOKEN, { polling: true });
+const app = express();
+
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   const username = msg.from.username || msg.from.first_name || "Безымянный пользователь";
