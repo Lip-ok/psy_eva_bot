@@ -380,11 +380,6 @@ const userResults = {};
 const bot = new TelegramBot(TOKEN, { polling: true });
 const app = express();
 
-// Установка команд для панели
-bot.setMyCommands([
-  { command: "/start", description: "Начать тест" },
-]);
-
 // Обработка команд /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
@@ -447,14 +442,14 @@ bot.on("callback_query", (callbackQuery) => {
 // Отправка результатов
 function sendResults(chatId) {
   const user = userResults[chatId];
-  let resultMessage = "Ваши результаты по аспектам:\n";
+  let resultMessage = `Результаты теста для пользователя ${user.username}:\n`;
 
   for (const [aspect, score] of Object.entries(user.scores)) {
     resultMessage += `*${aspect}*: ${score}\n`;
   }
 
   bot.sendMessage(chatId, "Спасибо за прохождение теста! Ваши ответы отправлены администратору.");
-  bot.sendMessage(ADMIN_ID, `Результаты теста пользователя ${user.username}:\n${resultMessage}`, { parse_mode: "Markdown" });
+  bot.sendMessage(ADMIN_ID, resultMessage, { parse_mode: "Markdown" });
 }
 
 // Запуск веб-сервера
