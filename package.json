@@ -5,13 +5,14 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "pm2 start server.js --name my-telegram-bot"
   },
   "author": "@lip_ok",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.3",
     "express": "^4.21.2",
-    "node-telegram-bot-api": "^0.66.0"
+    "node-telegram-bot-api": "^0.66.0",
+    "pm2": "^5.4.3"
   }
 }
