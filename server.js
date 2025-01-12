@@ -52,16 +52,6 @@ const questions = [
 // Хранение результатов
 const userResults = {};
 
-// Инициализация бота
-const bot = new TelegramBot(TOKEN, { polling: true });
-const app = express();
-
-// Установка команд для панели
-bot.setMyCommands([
-  { command: "/start", description: "Начать тест" },
-]);
-
-// Обработка команды /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   const username = msg.from.username || msg.from.first_name || "Безымянный пользователь";
@@ -73,7 +63,15 @@ bot.onText(/\/start/, (msg) => {
     scores: {},
   };
 
-  bot.sendMessage(chatId, `Привет, ${username}! Давайте начнём тест. Ответьте на вопросы.`);
+  const options = {
+    reply_markup: {
+      keyboard: [[{ text: "/start" }]], // Панель с командой /start
+      resize_keyboard: true,
+      one_time_keyboard: false,
+    },
+  };
+
+  bot.sendMessage(chatId, `Привет, ${username}! Нажмите /start, чтобы начать тест.`, options);
   askNextQuestion(chatId);
 });
 
@@ -120,6 +118,7 @@ bot.on("callback_query", (callbackQuery) => {
   askNextQuestion(chatId);
 });
 
+// Отправка результатов
 function sendResults(chatId) {
   const user = userResults[chatId];
   let resultMessage = "Ваши результаты по аспектам:\n";
@@ -129,7 +128,7 @@ function sendResults(chatId) {
   }
 
   bot.sendMessage(chatId, "Спасибо за прохождение теста! Ваши ответы отправлены администратору.");
-  bot.sendMessage(ADMIN_ID, `Результаты теста пользователя ${user.name}:\n${resultMessage}`, { parse_mode: "Markdown" });
+  bot.sendMessage(ADMIN_ID, `Результаты теста пользователя ${user.username}:\n${resultMessage}`, { parse_mode: "Markdown" });
 }
 
 // Запуск веб-сервера
