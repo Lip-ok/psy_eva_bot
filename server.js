@@ -56,12 +56,24 @@ const userResults = {};
 const bot = new TelegramBot(TOKEN, { polling: true });
 const app = express();
 
-// Обработка команд /start
+// Установка команд для панели
+bot.setMyCommands([
+  { command: "/start", description: "Начать тест" },
+]);
+
+// Обработка команды /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
+  const username = msg.from.username || msg.from.first_name || "Безымянный пользователь";
 
-  userResults[chatId] = { currentQuestion: 0, scores: {} };
-  bot.sendMessage(chatId, "Привет! Давайте начнём тест. Ответьте на вопросы.");
+  // Инициализация данных пользователя
+  userResults[chatId] = {
+    username,
+    currentQuestion: 0,
+    scores: {},
+  };
+
+  bot.sendMessage(chatId, `Привет, ${username}! Давайте начнём тест. Ответьте на вопросы.`);
   askNextQuestion(chatId);
 });
 
@@ -111,14 +123,14 @@ bot.on("callback_query", (callbackQuery) => {
 // Отправка результатов
 function sendResults(chatId) {
   const user = userResults[chatId];
-  let resultMessage = "Ваши результаты по аспектам:\n";
+  let resultMessage = `Результаты теста для пользователя ${user.username}:\n`;
 
   for (const [aspect, score] of Object.entries(user.scores)) {
     resultMessage += `*${aspect}*: ${score}\n`;
   }
-
+  
   bot.sendMessage(chatId, "Спасибо за прохождение теста! Ваши ответы отправлены администратору.");
-  bot.sendMessage(ADMIN_ID, `Результаты теста пользователя ${chatId}:\n${resultMessage}`, { parse_mode: "Markdown" });
+  bot.sendMessage(ADMIN_ID, resultMessage, { parse_mode: "Markdown" });
 }
 
 // Запуск веб-сервера
