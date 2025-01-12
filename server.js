@@ -380,6 +380,7 @@ const userResults = {};
 const bot = new TelegramBot(TOKEN, { polling: true });
 const app = express();
 
+// Обработка команд /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   const username = msg.from.username || msg.from.first_name || "Безымянный пользователь";
@@ -391,15 +392,7 @@ bot.onText(/\/start/, (msg) => {
     scores: {},
   };
 
-  const options = {
-    reply_markup: {
-      keyboard: [[{ text: "/start" }]], // Панель с командой /start
-      resize_keyboard: true,
-      one_time_keyboard: false,
-    },
-  };
-
-  bot.sendMessage(chatId, `Привет, ${username}! Нажмите /start, чтобы начать тест.`, options);
+  bot.sendMessage(chatId, `Привет, ${username}! Давайте начнём тест. Ответьте на вопросы.`);
   askNextQuestion(chatId);
 });
 
