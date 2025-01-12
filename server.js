@@ -383,16 +383,10 @@ const app = express();
 // Обработка команд /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
-  const username = msg.from.username || msg.from.first_name || "Безымянный пользователь";
+  const username = msg?.from?.username || msg?.from?.first_name || "Безымянный пользователь";
 
-  // Инициализация данных пользователя
-  userResults[chatId] = {
-    username,
-    currentQuestion: 0,
-    scores: {},
-  };
-
-  bot.sendMessage(chatId, `Привет, ${username}! Давайте начнём тест. Ответьте на вопросы.`);
+  userResults[chatId] = { currentQuestion: 0, scores: {}, username };
+  bot.sendMessage(chatId, "Привет! Давайте начнём тест. Ответьте на вопросы.");
   askNextQuestion(chatId);
 });
 
@@ -442,14 +436,14 @@ bot.on("callback_query", (callbackQuery) => {
 // Отправка результатов
 function sendResults(chatId) {
   const user = userResults[chatId];
-  let resultMessage = `Результаты теста для пользователя ${user.username}:\n`;
+  let resultMessage = "Ваши результаты по аспектам:\n";
 
   for (const [aspect, score] of Object.entries(user.scores)) {
     resultMessage += `*${aspect}*: ${score}\n`;
   }
 
   bot.sendMessage(chatId, "Спасибо за прохождение теста! Ваши ответы отправлены администратору.");
-  bot.sendMessage(ADMIN_ID, resultMessage, { parse_mode: "Markdown" });
+  bot.sendMessage(ADMIN_ID, `Результаты теста пользователя ${user?.username}:\n${resultMessage}`, { parse_mode: "Markdown" });
 }
 
 // Запуск веб-сервера
