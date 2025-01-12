@@ -1,0 +1,17 @@
+{
+  "name": "eva_bot",
+  "version": "1.0.0",
+  "description": "Developed by @lip_ok",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "@lip_ok",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}
